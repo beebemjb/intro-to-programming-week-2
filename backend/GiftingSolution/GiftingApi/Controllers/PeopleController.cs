@@ -1,21 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿namespace GiftingApi.Controllers;
 
-namespace GiftingApi.Controllers
+public class PeopleController : ControllerBase
 {
-    public class PeopleController : ControllerBase
-    {
 
-        //GET /people
-        [HttpGet("/people")]
-        public async Task<ActionResult> GetAllPeople()
-        {
-            var people = new List<PersonItemResponse>()
-            {
-                new PersonItemResponse("1", "Bill", "Hulley"),
-                new PersonItemResponse("2", "Mark", "Beebe")
-            };
-            var response = new PersonResponse(people);
-            return Ok(response);
-        }
+    private readonly ICatalogPeople _personCatalog;
+
+    public PeopleController(ICatalogPeople personCatalog)
+    {
+        _personCatalog = personCatalog;
+    }
+
+
+    // GET /people
+    [HttpGet("/people")]
+    public async Task<ActionResult<PersonResponse>> GetAllPeople()
+    {
+        PersonResponse response = await _personCatalog.GetPeopleAsync();
+        return Ok(response);
     }
 }

@@ -1,3 +1,6 @@
+using GiftingApi.Adapters;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,7 +10,28 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+// Setting up our "Services"
+builder.Services.AddTransient<ICatalogPeople, EfPeopleCatalog>(); // hey, API, if you need an ICatalogPeople, use this class.
+
+builder.Services.AddDbContext<GiftingDataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("gifts"));
+});
+
+builder.Services.AddCors(builder =>
+{
+    builder.AddDefaultPolicy(pol =>
+    {   // "Promiscuous Mode"
+        pol.AllowAnyHeader();
+        pol.AllowAnyOrigin();
+        pol.AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -17,6 +41,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
+
 
 app.MapControllers();
 
