@@ -1,4 +1,4 @@
-import { Injectable, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -8,9 +8,17 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { GiftGivingComponent } from './features/gift-giving/gift-giving.component';
 import { AboutUsComponent } from './features/about-us/about-us.component';
-import { PeopleListComponent } from './features/gift-giving/components/people-list/people-list.component';
 import {HttpClientModule} from '@angular/common/http';
 import { PersonDataService } from './services/people-data.service';
+import { PeopleEntryComponent } from './features/gift-giving/components/people-entry/people-entry.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { PeopleListComponent } from './features/gift-giving/components/people-list/people-list.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './state';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { PeopleEffects } from './state/effects/people-effects';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,13 +26,18 @@ import { PersonDataService } from './services/people-data.service';
     NavigationComponent,
     DashboardComponent,
     GiftGivingComponent,
-    AboutUsComponent,
-    PeopleListComponent
+    AboutUsComponent, 
+    PeopleListComponent, 
+    PeopleEntryComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule,
+    StoreModule.forRoot(reducers),
+    StoreDevtoolsModule.instrument(),
+    EffectsModule.forRoot([PeopleEffects])
   ],
   providers: [PersonDataService],
   bootstrap: [AppComponent]

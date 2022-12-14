@@ -2,3 +2,20 @@
 
 GET  http://localhost:1337/people HTTP/1.1
 Accept: application/json
+
+### adding a person
+
+POST http://localhost:1337/people HTTP/1.1
+Accept: application/json
+Content-Type: application/json
+
+{
+    "firstName": "Gene",
+    "lastName": "Michaels"
+}
+
+
+### Get a single person
+
+GET  http://localhost:1337/people/1 HTTP/1.1
+Accept: application/json

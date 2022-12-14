@@ -1,5 +1,8 @@
-﻿namespace GiftingApi.Controllers;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace GiftingApi.Controllers;
+
+[ApiController]
 public class PeopleController : ControllerBase
 {
 
@@ -10,6 +13,40 @@ public class PeopleController : ControllerBase
         _personCatalog = personCatalog;
     }
 
+    [HttpGet("/people/{id:int}")]
+    public async Task<ActionResult> GetPersonById(int id)
+    {
+        PersonItemResponse response = await _personCatalog.GetPersonByIdAsync(id);
+        if(response is null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            return Ok($"Getting person {id}");
+        }
+
+       
+    }
+
+    [HttpPost("/people")]
+    public async Task<ActionResult<PersonItemResponse>> AddPerson([FromBody] PersonCreateRequest request)
+    {
+        // Validate the request.
+        // if it's valid - do the work (add it to our database) 
+        // it it is NOT valid, you send a 400 (Bad Request)
+        // return a 201 Created
+        // Location Header (TODO)
+        // And a copy of the new thing you created.
+
+
+
+        PersonItemResponse response = await _personCatalog.AddPersonAsync(request);
+        return StatusCode(201, response);
+    }
+
+    
+    
 
     // GET /people
     [HttpGet("/people")]
